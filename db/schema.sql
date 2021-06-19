@@ -6,6 +6,7 @@ CREATE TABLE roles (
     PRIMARY KEY (role_id)
 );
 
+
 CREATE TABLE users(
     id INT AUTO_INCREMENT NOT NULL,
     firstName VARCHAR(255),
