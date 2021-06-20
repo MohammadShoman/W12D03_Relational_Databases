@@ -51,16 +51,18 @@ const createNewArticle = (req, res) => {
 };
 
 const updateAnArticleById = (req, res) => {
+	/*
   const id = req.params.id;
-
-  articlesModel
-    .findByIdAndUpdate(id, req.body, { new: true })
-    .then((result) => {
-      res.status(200).json(result);
-    })
-    .catch((err) => {
-      res.send(err);
-    });
+  const {title, description}=req.body
+const query=`UPDATE articles
+SET title=?, description=?,
+WHERE id=${id} ;`
+const array=[title, description]
+db.query(query,array, (err,result)=>{
+	if(err) throw err
+	res.json(result)
+})
+ */
 };
 
 const deleteArticleById = (req, res) => {
