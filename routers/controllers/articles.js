@@ -10,18 +10,13 @@ const getAllArticles = (req, res) => {
 };
 
 const getArticlesByAuthor = (req, res) => {
-	const author = req.query.author;
+	const author = req.query.author_id;
 
-	if (!author) return res.status(404).json('not found');
-
-	articlesModel
-		.find({ author })
-		.then((result) => {
-			res.status(200).json(result);
-		})
-		.catch((err) => {
-			res.send(err);
-		});
+	const query=`SELECT * FROM articles WHERE author_id=${author} and is_deleted=0`
+	db.query(query,(err,result)=>{
+		if(err)throw err
+		res.json(result)
+	})
 };
 
 const getAnArticleById = (req, res) => {
