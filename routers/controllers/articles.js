@@ -39,7 +39,7 @@ const getAnArticleById = (req, res) => {
 const createNewArticle = (req, res) => {
   const { title, description, author_id } = req.body;
   const query = `INSERT INTO articles (title, description, author_id) VALUES (?,?,?);`;
-  const array = [title, description, author_id]; 
+  const array = [title, description, author_id];
   db.query(query, array, (err, result) => {
     if (err) throw err;
     const query = `SELECT * FROM articles WHERE title="${title}";`;
@@ -51,37 +51,41 @@ const createNewArticle = (req, res) => {
 };
 
 const updateAnArticleById = (req, res) => {
-	
   const id = req.params.id;
-  const {title, description}=req.body
-const query=`UPDATE articles
+  const { title, description } = req.body;
+  const query = `UPDATE articles
 SET title=?, description=?
-WHERE id=${id} ;`
-const array=[title, description]
-db.query(query,array, (err,result)=>{
-	if(err) throw err
-	const query=`SELECT * FROM articles WHERE id=${id};`
-  db.query(query,(err,result)=>{
-    if(err) throw err
-    res.json(result)
-  })
-})
- 
+WHERE id=${id} ;`;
+  const array = [title, description];
+  db.query(query, array, (err, result) => {
+    if (err) throw err;
+    const query = `SELECT * FROM articles WHERE id=${id};`;
+    db.query(query, (err, result) => {
+      if (err) throw err;
+      res.json(result);
+    });
+  });
 };
 
 const deleteArticleById = (req, res) => {
   const id = req.params.id;
-  articlesModel
-    .findByIdAndDelete(id)
-    .then((result) => {
-      res.status(200).json({
-        success: true,
-        message: `Success Delete atricle with id => ${id}`,
+  const query = `UPDATE articles
+  SET is_deleted=1
+  WHERE id=${id}`;
+  db.query(query, (err, result) => {
+    if (err) throw err;
+    const query = `SELECT * FROM articles WHERE id=${id};`;
+    db.query(query, (err, result_1) => {
+      if (err) throw err;
+      const query = `DELETE FROM articles
+WHERE is_deleted=1;`;
+
+      db.query(query, (err, result_2) => {
+        if (err) throw err;
+        res.json(result_1);
       });
-    })
-    .catch((err) => {
-      res.send(err);
     });
+  });
 };
 
 const deleteArticlesByAuthor = (req, res) => {
