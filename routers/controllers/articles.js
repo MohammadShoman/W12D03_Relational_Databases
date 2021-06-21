@@ -89,19 +89,24 @@ WHERE is_deleted=1;`;
 };
 
 const deleteArticlesByAuthor = (req, res) => {
-  const author = req.body.author;
+  const author = req.query.author_id;
+  const query = `UPDATE articles
+  SET is_deleted=1
+  WHERE author_id=${author}`;
+  db.query(query, (err, result) => {
+    if (err) throw err;
+    const query = `SELECT * FROM articles WHERE author_id=${author};`;
+    db.query(query, (err, result_1) => {
+      if (err) throw err;
+      const query = `DELETE FROM articles
+WHERE is_deleted=1;`;
 
-  articlesModel
-    .deleteMany({ author })
-    .then((result) => {
-      res.status(200).json({
-        success: true,
-        message: `Success Delete atricle with id => ${author}`,
+      db.query(query, (err, result_2) => {
+        if (err) throw err;
+        res.json(result_1);
       });
-    })
-    .catch((err) => {
-      res.send(err);
     });
+  });
 };
 
 module.exports = {
